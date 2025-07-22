@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisis Shield Vietnam</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f2f5, #e0e4e8);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top: 0;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo i {
+            font-size: 30px;
+            margin-right: 10px;
+            color: #1abc9c;
+        }
+
+        .navbar .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .navbar .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            transition: transform 0.3s ease;
+            position: fixed;
+            height: 100%;
+            top: 60px;
+            left: 0;
+            overflow-y: auto;
+            transform: translateX(0);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-250px);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .sidebar-menu .nav-link {
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-menu .nav-link:hover {
+            background-color: #1abc9c;
+        }
+
+        .sidebar-menu .nav-link i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Submenu styles */
+        .submenu {
+            list-style: none;
+            padding: 0 0 0 20px;
+            margin: 0;
+            display: none;
+            background-color: #3d566e;
+        }
+
+        .submenu .nav-link {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .submenu .nav-link:hover {
+            background-color: #1abc9c;
+        }
+
+        .has-submenu>.nav-link .arrow {
+            margin-left: auto;
+            transition: transform 0.3s;
+        }
+
+        .has-submenu.active>.nav-link .arrow {
+            transform: rotate(90deg);
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 90px 30px 30px;
+            width: 100%;
+            transition: margin-left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .main-content.collapsed {
+            margin-left: 0;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid #1abc9c;
+            padding-bottom: 10px;
+        }
+
+        .section p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .section ul {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .section ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section ul li:before {
+            content: "•";
+            color: #1abc9c;
+            position: absolute;
+            left: 0;
+        }
+
+        .team-member {
+            /* display: flex; */
+            /* align-items: center; */
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .team-member:hover {
+            background: #e0f7f9;
+        }
+
+        .team-member i {
+            margin-right: 15px;
+            color: #1abc9c;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .navbar .toggle-btn {
+                display: block;
+            }
+
+            .navbar .logo h1 {
+                font-size: 18px;
+            }
+
+            .sidebar {
+                top: 50px;
+                transform: translateX(-250px);
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-top: 60px;
+            }
+        }
+
+        .layout {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>CRISIS SHIELD VIETNAM <i style="font-size: 16px;">Tấm khiên truyền thông - Bình ổn giữa bão dư
+                    luận</span></h1>
+        </div>
+        <button class="toggle-btn" id="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    <div class="layout">
+        <div class="sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#gioi-thieu" class="nav-link"><i class="fas fa-info-circle"></i> Giới thiệu</a></li>
+                <li class="has-submenu">
+                    <a href="#du-an" class="nav-link"><i class="fas fa-project-diagram"></i> Dự án thực tế <i
+                            class="fas fa-chevron-right arrow"></i></a>
+                    <ul class="submenu">
+                        <li><a href="#du-an-1" class="nav-link"><i class="fas fa-video"></i> Gia đình PTTC</a></li>
+                        <li><a href="#du-an-2" class="nav-link"><i class="fas fa-coffee"></i> The Coffee House</a></li>
+                        <li><a href="#du-an-3" class="nav-link"><i class="fas fa-candy-cane"></i> Kẹo Kera</a></li>
+                    </ul>
+                </li>
+                <li><a href="#dich-vu" class="nav-link"><i class="fas fa-concierge-bell"></i> Dịch vụ</a></li>
+                <li><a href="#doi-ngu" class="nav-link"><i class="fas fa-users"></i> Đội ngũ chuyên gia</a></li>
+                <li><a href="#tai-nguyen" class="nav-link"><i class="fas fa-book"></i> Tài nguyên học thuật</a></li>
+                <li><a href="#lien-he" class="nav-link"><i class="fas fa-envelope"></i> Liên hệ</a></li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content" id="main-content">
+            <!-- Giới thiệu -->
+            <div class="section" id="gioi-thieu">
+                <h2>1. GIỚI THIỆU</h2>
+                <p><b>Crisis Shield Vietnam</b> là đơn vị tư vấn truyền thông chuyên xử lý khủng hoảng, xây dựng chiến
+                    lược truyền thông phòng
+                    ngừa và tái cấu trúc hình ảnh thương hiệu sau khủng hoảng. Với hơn 10 năm kinh nghiệm trong lĩnh
+                    vực, chúng tôi hỗ trợ
+                    các doanh nghiệp, tổ chức và cá nhân vượt qua các tình huống khủng hoảng một cách hiệu quả, dựa trên
+                    nguyên tắc minh
+                    bạch, kịp thời và nhân văn. Đội ngũ của chúng tôi kết hợp chuyên môn từ truyền thông, pháp lý, tâm
+                    lý học và khoa học
+                    hành vi công chúng để cung cấp các giải pháp toàn diện, giúp khách hàng không chỉ giải quyết vấn đề
+                    tức thì mà còn xây
+                    dựng nền tảng bền vững cho tương lai.
+                </p>
+                <p><strong>Triết lý hoạt động:</strong></p>
+                <ul>
+                    <li><b>Nhanh chóng</b> trong nhận biết và đánh giá tình hình khủng hoảng.</li>
+                    <li><b>Nhạy bén</b> trong xử lý, đảm bảo phản ứng phù hợp với ngữ cảnh văn hóa và xã hội tại Việt
+                        Nam.</li>
+                    <li><b>Nhân văn</b> trong cách tiếp cận, ưu tiên bảo vệ lợi ích của các bên liên quan và duy trì
+                        lòng tin từ công chúng.</li>
+                    <li><b>Chiến lược</b> trong phối hợp, sử dụng dữ liệu và phân tích để lập kế hoạch dài hạn.</li>
+                </ul>
+                <p style="margin: 0 16px;">"Xử lý khủng hoảng không chỉ là dập tắt ngọn lửa, mà còn là xây dựng nền
+                    tảng vững chắc để ngăn ngừa
+                    và phục hồi." —
+                    Crisis Shield Vietnam, lấy cảm hứng từ Timothy Coombs, chuyên gia về Lý thuyết Truyền thông Khủng
+                    hoảng Tình huống
+                    (Situational Crisis Communication Theory), nhấn mạnh việc phản hồi phù hợp với mức độ trách nhiệm để
+                    bảo vệ danh tiếng.
+                </p>
+                <br />
+                <p>
+                    Chúng tôi đã hỗ trợ hàng trăm khách hàng tại Việt Nam, từ doanh nghiệp lớn đến cá nhân nổi tiếng
+                    trên mạng xã hội, giúp
+                    họ duy trì uy tín và phát triển bền vững. Các dịch vụ của chúng tôi được thiết kế để ứng phó với các
+                    khủng hoảng đa
+                    dạng, từ scandal cá nhân đến sự cố sản phẩm, trong bối cảnh truyền thông kỹ thuật số phát triển mạnh
+                    mẽ.
+                </p>
+            </div>
+
+            <!-- Dự án thực tế -->
+            <div class="section" id="du-an">
+                <h2>2. DỰ ÁN THỰC TẾ (Phân tích chi tiết các case thực tế để rút bài học)</h2>
+                <p>
+                    Phần này trình bày phân tích sâu về các sự kiện khủng hoảng thực tế tại Việt Nam, dựa trên thông tin
+                    công khai từ các
+                    nguồn đáng tin cậy. Chúng tôi tập trung vào sai lầm ban đầu, hành động xử lý, kết quả và bài học rút
+                    ra, nhằm minh họa
+                    cách áp dụng các chiến lược khủng hoảng hiệu quả. Các phân tích này không đại diện cho dự án trực
+                    tiếp của Crisis Shield
+                    Vietnam mà là ví dụ học thuật để khách hàng học hỏi.
+                </p>
+                <div id="du-an-1">
+                    <h3>2.1 Gia đình PTTC – Hình tượng sụp đổ vì sự cố thang máy đòi tai nghe</h3>
+                    <ul style="margin-top: 10px;">
+                        <li>
+                            <p><strong>Sự kiện chi tiết:</strong> Vào ngày 22/5/2025, một đoạn clip từ camera an ninh
+                                lan truyền trên mạng xã hội, ghi lại cảnh bố và con gái trong gia
+                                đình PTTC – một kênh TikTok nổi tiếng với hình ảnh “gia đình tử tế” – chặn cửa thang máy
+                                tại chung cư để chất vấn một
+                                cặp vợ chồng, nghi ngờ họ lấy cắp chiếc tai nghe AirPods bị mất của con gái út, dựa trên
+                                định vị GPS. Cuộc tranh cãi gay
+                                gắt và các cáo buộc lẫn nhau đã khiến gia đình bị chỉ trích mạnh mẽ vì hành vi thiếu
+                                lịch sự, phá vỡ hình tượng “sống
+                                ảo” được xây dựng trên TikTok. <i>Nguồn: hoahoctro.tienphong.vn </i> + 2 nguồn khác</p>
+                        </li>
+                        <li>
+                            <p><strong>Sai lầm ban đầu:</strong> Lời xin lỗi đầu tiên của gia đình thiếu sự chân thành,
+                                tập trung vào biện minh thay vì thừa nhận lỗi, khiến dư luận phản
+                                ứng tiêu cực. Việc xóa video xin lỗi sau đó càng làm tình hình trầm trọng, kéo dài tranh
+                                cãi. Gia đình không sử dụng
+                                trung gian độc lập hoặc chuyên gia truyền thông để làm rõ sự việc, dẫn đến tranh cãi lan
+                                rộng khi các tin nhắn nội bộ bị
+                                rò rỉ, ám chỉ “kịch bản có sẵn”. <i>Nguồn: youtube.com, kenh14.vn</i>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Hành động xử lý và kết quả:</strong> Gia đình PTTC phát hành video xin lỗi chính
+                                thức, nhưng dư luận vẫn tiếp tục chỉ trích, dẫn đến mất lượng lớn người theo
+                                dõi trên TikTok và hình ảnh thương hiệu bị tổn hại lâu dài. Cặp vợ chồng bị ảnh hưởng
+                                chấp nhận lời xin lỗi nhưng nhấn
+                                mạnh nhu cầu minh bạch. <i>Nguồn: youtube.com, kenh14.vn</i>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Khung lý thuyết áp dụng:</strong> Chiến lược xử lý trường hợp này dựa trên <b>Lý
+                                    thuyết Truyền thông Khủng hoảng Tình huống (Situational Crisis Communication
+                                    Theory – SCCT)</b> của W. Timothy Coombs, nhấn mạnh việc điều chỉnh phản hồi dựa
+                                trên mức độ trách nhiệm trong khủng hoảng.
+                                Với trường hợp này, do gia đình chịu trách nhiệm cao, cần áp dụng <b>chiến lược tái
+                                    xâydựng</b> (ví dụ: xin lỗi chân thành và
+                                hành động khắc phục). Tuy nhiên, cách tiếp cận ban đầu thiên về <b>phủ nhận và biện
+                                    minh</b>
+                                không phù hợp với khuyến nghị của
+                                SCCT, làm gia tăng thiệt hại. Một lời xin lỗi kịp thời, minh bạch, thông qua người đại
+                                diện trung lập, có thể đã giảm
+                                thiểu tổn thất danh tiếng.
+
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Bài học và khuyến nghị:</strong> Trong khủng hoảng danh tiếng cá nhân trên mạng
+                                xã hội, cần áp dụng ngay chiến lược “xin lỗi và khắc phục” theo SCCT, kết
+                                hợp với minh bạch và giao tiếp hai chiều. Việc tư vấn sớm với người đại diện trung lập
+                                có thể làm rõ sự việc thông qua
+                                họp báo hoặc livestream. Chuyên gia Hạ Hồng Việt nhận định: “Công chúng cảm thấy bị phản
+                                bội khi hình tượng trên mạng
+                                mâu thuẫn với hành vi thực tế.” Coombs nhấn mạnh: “Phản hồi kịp thời và chân thành là
+                                chìa khóa bảo vệ danh tiếng.
+                            </p>
+                        </li>
+                    </ul>
+                    <img src="/Picture1.png" style="width: 100%;" />
+                </div>
+                <div id="du-an-2" style="margin-top: 30px;">
+                    <h3>2.2 The Coffee House – Cửa kính vỡ và bài học về phản hồi kịp thời</h3>
+                    <ul style="margin-top: 10px;">
+                        <li>
+                            <p><strong>Sự kiện chi tiết:</strong> Vào tối ngày 20/4/2024, tại chi nhánh Thái Hà, Hà Nội,
+                                một cơn giông lốc kèm mưa đá khiến kính cường lực tại tòa nhà
+                                Việt Tower bị vỡ, làm bảy người bị thương (bốn nhân viên và ba khách hàng). Trong đó, nữ
+                                bác sĩ Hoàng Minh Lý (29 tuổi)
+                                bị thương nặng, dẫn đến hôn mê, chấn thương cột sống và nguy cơ liệt nửa người.
+                                <i>Nguồn: thecoffeehouse.com </i> + 4 nguồn khác
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Sai lầm ban đầu:</strong> Phản hồi ban đầu của công ty chậm trễ, dẫn đến chỉ
+                                trích từ dư luận về trách nhiệm an toàn và thiếu minh bạch trong cập
+                                nhật thông tin. <i>Nguồn: facebook.com, laodong.vn</i>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Hành động xử lý và kết quả:</strong>The Coffee House nhanh chóng cung cấp hỗ trợ
+                                y tế khẩn cấp, công khai xin lỗi qua mạng xã hội và đạt thỏa thuận bồi
+                                thường với các nạn nhân, bao gồm 117 triệu đồng cho nữ bác sĩ Hoàng Minh Lý, hoàn tất
+                                vào tháng 5/2024. Những hành động
+                                này giúp duy trì uy tín, tránh kiện tụng kéo dài và phục hồi hình ảnh thương hiệu bằng
+                                cách tập trung vào “đáp ứng cảm
+                                xúc” của nạn nhân và công chúng. <i>Nguồn: thecoffeehouse.com </i> + 3 nguồn khác
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Khung lý thuyết áp dụng:</strong> Trường hợp này được phân tích dựa trên <b>Mô
+                                    hình Truyền thông Khủng hoảng</b>của Kathleen Fearn-Banks, nhấn mạnh việc lập kế
+                                hoạch chủ động và tập trung vào các bên liên quan. Các hành động sau đó
+                                của The Coffee House phù hợp với <b>giai đoạn phản hồi</b> của mô hình, cung cấp hỗ trợ
+                                thiết thực và xin lỗi công khai để giải quyết cảm xúc của các bên liên quan. Tuy nhiên,
+                                sự
+                                chậm trễ ban đầu đi ngược lại khuyến nghị của Fearn-Banks về giao tiếp ngay lập tức, gây
+                                ảnh hưởng tạm thời đến nhận
+                                thức của công chúng.
+
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Bài học và khuyến nghị:</strong> Trong các khủng hoảng do yếu tô bên ngoài, sự im
+                                lặng ban đầu có thể gây hại. Phản hồi nhanh chóng, hỗ trợ thực tế và
+                                hợp tác với cơ quan chức năng, như Fearn-Banks khuyến nghị, giúp khôi phục lòng tin. Cần
+                                lập kế hoạch ứng phó trước, bao
+                                gồm kiểm tra an toàn định kỳ. Fearn-Banks nhấn mạnh: “Lập kế hoạch ứng phó khủng hoảng
+                                trước là yếu tố quyết định thành
+                                bại.”
+
+                            </p>
+                        </li>
+                    </ul>
+                    <img src="/Picture2.png" style="width: 100%;" />
+                </div>
+                <div id="du-an-3" style="margin-top: 30px;">
+                    <h3>2.3 Kẹo Kera – Scandal tin đồn và bài học về minh bạch</h3>
+                    <ul style="margin-top: 10px;">
+                        <li>
+                            <p><strong>Sự kiện chi tiết:</strong> VĐầu năm 2025, sản phẩm kẹo rau củ Kera (do Công ty
+                                Asia Life sản xuất) bị cáo buộc quảng cáo sai sự thật, thổi phồng
+                                công dụng (như hỗ trợ tiêu hóa, thanh lọc cơ thể) mà không có cơ sở khoa học. Nhãn mác
+                                không ghi rõ chất tạo ngọt, dẫn
+                                đến tin đồn “gây nghiện” và gây ra scandal lớn liên quan đến các influencer như Quang
+                                Linh Vlogs, Hằng Du Mục và Hoa hậu
+                                Thùy Tiên. Công ty bị phạt 224 triệu đồng, bị đình chỉ hoạt động hai tháng và bị khởi tố
+                                hình sự về sản xuất hàng giả,
+                                lừa dối khách hàng vào ngày 3/4/2025.
+                                <i>Nguồn: tuoitre.vn</i> + 8 nguồn khác
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Sai lầm ban đầu:</strong> Quảng cáo thổi phồng qua mạng xã hội mà không kiểm
+                                chứng, cùng với việc chậm hợp tác với cơ quan chức năng, dẫn đến mất
+                                lòng tin và thu hồi sản phẩm toàn quốc. Scandal kéo dài với các cá nhân bị tạm giam.
+                                <i>Nguồn: tuoitre.vn</i> + 5 nguồn khác
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Hành động xử lý và kết quả:</strong>Các influencer công khai xin lỗi và bị phạt
+                                hành chính (70 triệu đồng mỗi người), nhưng thiệt hại danh tiếng nghiêm
+                                trọng, không có dấu hiệu phục hồi nhanh chóng. Cơ quan chức năng yêu cầu thu hồi sản
+                                phẩm và bồi thường cho người tiêu
+                                dùng.<i>Nguồn: tuoitre.vn </i> + 3 nguồn khác
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Khung lý thuyết áp dụng:</strong> Chiến lược xử lý dựa trên <b>Mô hình Truyền
+                                    thông Hai chiều Đối xứng</b>của James E. Grunig, nhấn mạnh giao tiếp minh bạch và
+                                đối thoại lẫn nhau để xây dựng lòng tin. Việc công ty không chủ
+                                động giao tiếp với các bên liên quan (ví dụ: thông qua livestream minh bạch hoặc kiểm
+                                tra nhà máy) vi phạm mô hình này,
+                                kéo dài khủng hoảng. Một cách tiếp cận đối xứng, hợp tác sớm với cơ quan chức năng và
+                                chuyên gia độc lập, có thể đã giảm
+                                thiểu thiệt hại.
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Bài học và khuyến nghị:</strong>Để lật ngược tình thế, cần tổ chức livestream
+                                minh bạch với chuyên gia độc lập và hợp tác ngay với cơ quan chức năng,
+                                như Grunig khuyến nghị. Nếu xử lý tốt, có thể phục hồi trong vài tuần bằng cách tập
+                                trung vào bồi thường và tái xây dựng
+                                lòng tin. Grunig nhấn mạnh: “Truyền thông hai chiều đối xứng xây dựng lòng tin lâu dài.”
+                                Minh bạch là vũ khí mạnh mẽ
+                                nhất chống lại tin đồn và quảng cáo sai sự thật.
+                            </p>
+                        </li>
+                    </ul>
+                    <img src="/Picture3.png" style="width: 100%;" />
+                </div>
+            </div>
+
+            <!-- Dịch vụ -->
+            <div class="section" id="dich-vu">
+                <h2>3. DỊCH VỤ</h2>
+                <table>
+                    <tr>
+                        <th>Dịch vụ</th>
+                        <th>Mô tả Chi Tiết</th>
+                    </tr>
+                    <tr>
+                        <td>Tư vấn xử lý khủng hoảng</td>
+                        <td>Hỗ trợ 24/7 thiết lập nhóm ứng phó khẩn cấp, quản lý truyền thông, pháp lý và dư luận; bao
+                            gồm phân tích tình hình, soạn
+                            thảo tuyên bố và giám sát mạng xã hội.</td>
+                    </tr>
+                    <tr>
+                        <td>Phòng ngừa khủng hoảng</td>
+                        <td>Coaching cá nhân hóa cho CEO/KOL về kỹ năng phỏng vấn, xử lý scandal, xây dựng hình tượng cá
+                            nhân bền vững thông qua
+                            chiến lược nội dung.</td>
+                    </tr>
+                    <tr>
+                        <td>Quản trị hình ảnh lãnh đạo</td>
+                        <td>Coaching CEO/KOL, xây dựng hình tượng.</td>
+                    </tr>
+                    <tr>
+                        <td>Tái cấu trúc sau khủng hoảng</td>
+                        <td>Chiến lược truyền thông phục hồi, tối ưu hóa SEO để giảm nội dung tiêu cực trên Google, tái
+                            xây dựng niềm tin qua các
+                            chiến dịch CSR và khảo sát công chúng.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Đội ngũ chuyên gia -->
+            <div class="section" id="doi-ngu">
+                <h2>4. ĐỘI NGŨ CHUYÊN GIA</h2>
+                <div class="team-member">👤 <b>Nguyễn Ngọc Long (Blackmoon)</b>>
+                    <ul style="margin-top: 20px;">
+                        <li>Chuyên gia truyền thông - Sáng lập Truyền thông Trăng Đen.
+                        </li>
+                        <li>
+                            Kinh nghiệm: Diễn giảng các khóa về khủng hoảng cho Be, Làng Háo Hức, và KOL showbiz; chuyên
+                            sâu về quản lý dư luận trên
+                            mạng xã hội.
+                        </li>
+                    </ul>
+                    <img src="/Picture4.png" style="max-width: 100%;" />
+                </div>
+
+                <div class="team-member">👤 <b>Hạ Hồng Việt</b>>
+                    <ul style="margin-top: 20px;">
+                        <li>Giám đốc Sellator - Chuyên gia chiến lược và xử lý khủng hoảng.
+                        </li>
+                        <li>
+                            Kinh nghiệm: Tư vấn cho nhiều thương hiệu lớn về quản lý danh tiếng, với trọng tâm vào phân
+                            tích hành vi công chúng.
+
+                        </li>
+                    </ul>
+                    <img src="/Picture5.png" style="max-width: 100%;" />
+                </div>
+                <div class="team-member">👤 <b>Trương Hoàng Kỳ</b>>
+                    <ul style="margin-top: 20px;">
+                        <li>ThS Tâm lý - Truyền thông, giảng viên phân tích hành vi đám đông.
+
+                        </li>
+                        <li>
+                            Kinh nghiệm: Áp dụng tâm lý học trong các chiến dịch truyền thông, giúp khách hàng hiểu và
+                            ứng phó với phản ứng cảm xúc
+                            từ dư luận.
+
+                        </li>
+                    </ul>
+                </div>
+                <div class="team-member">👤 <b>Lê Huy Khiêm
+                    </b>>
+                    <ul style="margin-top: 20px;">
+                        <li>TS Truyền thông đại chúng, chuyên lược danh tiếng và dư luận số.
+
+                        </li>
+                        <li>
+                            Kinh nghiệm: Nghiên cứu và tư vấn về khủng hoảng kỹ thuật số, bao gồm SEO và quản lý nội
+                            dung trực tuyến.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tài nguyên học thuật -->
+            <div class="section" id="tai-nguyen">
+                <h2>5. TÀI NGUYÊN HỌC THUẬT</h2>
+                <ul>
+                    <li>E-book: Các mô hình xin lỗi hiệu quả trong khủng hoảng truyền thông (tải miễn phí, bao gồm ví dụ
+                        từ các case quốc tế).
+                    </li>
+                    <li>Phân tích case: "Bài học từ sự cố The Coffee House: Phản hồi cảm xúc và trách nhiệm" (báo cáo
+                        chi tiết 20 trang).</li>
+                    <li>Bài giảng: "Xử lý khủng hoảng danh tiếng cá nhân – Từ case Gia đình PTTC" (video webinar 45
+                        phút).
+                    </li>
+                    <li>Video: "4 bước hòa hoãn khủng hoảng với minh bạch và chiến lược" (hướng dẫn thực tế dựa trên
+                        case Kẹo Kera).
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Liên hệ -->
+            <div class="section" id="lien-he">
+                <h2>6. LIÊN HỆ</h2>
+                <p>✉️ Email: contact@crisisshield.vn</p>
+                <p>☎️ Hotline:1900 6789 (hỗ trợ 24/7 cho các trường hợp khẩn cấp).
+                </p>
+                <p>🏢 Văn phòng: 86 Nguyễn Văn Thủ, Q.1, TP.HCM</p>
+                <p>📲 Mạng xã hội: Facebook, LinkedIn, Zalo (theo dõi để nhận cập nhật về các case mới và mẹo xử lý
+                    khủng hoảng)</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- Sidebar -->
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('collapsed');
+        });
+
+        // Toggle submenu
+        $('.has-submenu > .nav-link').on('click', function (e) {
+            e.preventDefault();
+            const $parent = $(this).parent();
+            const $submenu = $parent.find('.submenu');
+            if ($submenu.length) {
+                $parent.toggleClass('active');
+                $submenu.slideToggle(300);
+                $('.has-submenu').not($parent).removeClass('active');
+                $('.submenu').not($submenu).slideUp(300);
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    if (window.innerWidth <= 768) {
+                        document.getElementById('sidebar').classList.add('collapsed');
+                        document.getElementById('main-content').classList.add('collapsed');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
